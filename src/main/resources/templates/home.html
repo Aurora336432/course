@@ -1,17 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head><title>首页</title></head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
 <body>
 <h1>欢迎</h1>
+
+<!-- 学生菜单 -->
 <div sec:authorize="hasAuthority('STUDENT')">
- <a href="/student/courses">浏览课程</a><br/>
+    <h3>学生功能</h3>
+    <ul>
+        <li><a th:href="@{/student/courses}">浏览课程</a></li>
+        <li><a th:href="@{/student/schedule}">我的课表</a></li>
+        <li><a th:href="@{/student/grades}">我的成绩</a></li>
+    </ul>
 </div>
+
+<!-- 教师菜单 -->
 <div sec:authorize="hasAuthority('TEACHER')">
-   <a href="/teacher/courses">我的课程</a><br/>
+    <h3>教师功能</h3>
+    <ul>
+        <li><a th:href="@{/teacher/courses}">我的课程</a></li>
+        <li><a th:href="@{/teacher/courses/create}">创建课程</a></li>
+    </ul>
 </div>
+
+<!-- 管理员菜单（可选） -->
 <div sec:authorize="hasAuthority('ADMIN')">
-    <a href="/admin/users">用户管理</a>
+    <h3>管理员功能</h3>
+    <ul>
+        <li><a th:href="@{/admin/users}">用户管理</a></li>
+    </ul>
 </div>
+
+<!-- 注销表单 -->
 <form method="post" th:action="@{/logout}">
     <button type="submit">注销</button>
 </form>
