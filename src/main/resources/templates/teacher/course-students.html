@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>课程学生名单</title>
+    <style>
+        .stats { margin: 1em 0; padding: 1em; background: #f0f0f0; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+<h1>课程学生名单</h1>
+
+<div th:if="${successMessage}" class="success" th:text="${successMessage}"></div>
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<!-- 成绩统计区域 -->
+<div th:if="${gradedCount != null}" class="stats">
+    <h3>成绩统计</h3>
+    <p>已录入人数: [[${gradedCount}]]</p>
+    <p>平均分: [[${averageScore}]]</p>
+    <p>最高分: [[${maxScore}]]</p>
+    <p>最低分: [[${minScore}]]</p>
+</div>
+<div th:unless="${gradedCount != null}" class="stats">
+    <p>暂无已录入成绩</p>
+</div>
+
+<table border="1">
+    <thead>
+        <tr><th>学生</th><th>成绩状态</th><th>当前成绩</th><th>评语</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+        <tr th:each="e : ${enrollments}">
+            <td th:text="${e.studentUsername}"></td>
+            <td>
+                <span th:if="${e.status == '已录入'}" style="color:green">已录入</span>
+                <span th:if="${e.status == '未录入'}" style="color:orange">未录入</span>
+            </td>
+            <td th:text="${e.score != null ? e.score : '---'}"></td>
+            <td th:text="${e.gradeComment != null ? e.gradeComment : '---'}"></td>
+            <td>
+                <!-- 成绩表单，使用th:action自动携带CSRF -->
+                <form th:action="@{/teacher/enrollments/{id}/grade(id=${e.id})}" method="post">
+                    <input type="number" name="score" min="0" max="100" required th:value="${e.score}" placeholder="成绩0-100"/>
+                    <input type="text" name="comment" maxlength="255" placeholder="评语（可选）"/>
+                    <button type="submit" th:text="${e.status == '未录入'} ? '录入' : '修改'">操作</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(enrollments)}">
+            <td colspan="5">暂无学生选课</td>
+        </tr>
+    </tbody>
+</table>
+<br/>
+<a href="/teacher/courses">返回我的课程</a>
+<a href="/home">返回首页</a>
+</body>
+</html>

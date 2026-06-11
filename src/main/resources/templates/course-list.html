@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>课程列表</title>
+</head>
+<body>
+<h1>课程列表</h1>
+
+<!-- 显示成功或错误消息 -->
+<div th:if="${successMessage}" th:text="${successMessage}" style="color: green;"></div>
+<div th:if="${error}" th:text="${error}" style="color: red;"></div>
+
+<!-- 搜索表单 -->
+<form method="get" th:action="@{/student/courses}">
+    <input type="text" name="keyword" th:value="${keyword}" placeholder="按课程名称搜索"/>
+    <button type="submit">搜索</button>
+</form>
+
+<!-- 课程表格 -->
+<table border="1">
+    <thead>
+        <tr>
+            <th>课程名称</th>
+            <th>学分</th>
+            <th>容量</th>
+            <th>已选人数</th>
+            <th>上课时间</th>
+            <th>授课教师</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="course : ${courses}">
+            <td th:text="${course.name}"></td>
+            <td th:text="${course.credit}"></td>
+            <td th:text="${course.capacity}"></td>
+            <td th:text="${course.enrolledCount}"></td>
+            <td th:text="${course.schedule}"></td>
+            <td th:text="${course.teacher.username}"></td>
+            <td>
+                <!-- 选课表单：POST 请求，使用 th:action 自动生成 CSRF Token -->
+                <form method="post" th:action="@{/student/courses/{id}/enroll(id=${course.id})}">
+                    <button type="submit">选课</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${courses.empty}">
+            <td colspan="7">暂无课程</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- 分页导航 -->
+<div th:if="${totalPages > 0}">
+    <span th:if="${currentPage > 0}">
+        <a th:href="@{/student/courses(page=0, size=10, keyword=${keyword})}">首页</a>
+        <a th:href="@{/student/courses(page=${currentPage - 1}, size=10, keyword=${keyword})}">上一页</a>
+    </span>
+    <span> 第 [[${currentPage + 1}]] / [[${totalPages}]] 页 </span>
+    <span th:if="${currentPage + 1 < totalPages}">
+        <a th:href="@{/student/courses(page=${currentPage + 1}, size=10, keyword=${keyword})}">下一页</a>
+        <a th:href="@{/student/courses(page=${totalPages - 1}, size=10, keyword=${keyword})}">末页</a>
+    </span>
+</div>
+
+<br/>
+<a href="/home">返回首页</a>
+</body>
+</html>

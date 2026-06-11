@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>我的课表</title></head>
+<body>
+<h1>我的课表</h1>
+<table border="1">
+    <tr>
+        <th>课程名称</th>
+        <th>学分</th>
+        <th>上课时间</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="enrollment : ${enrollments}">
+        <td th:text="${enrollment.course.name}"></td>
+        <td th:text="${enrollment.course.credit}"></td>
+        <td th:text="${enrollment.course.schedule}"></td>
+        <td>
+            <form method="post" th:action="@{/student/enrollments/{id}/drop(id=${enrollment.id})}">
+                <button type="submit">退课</button>
+            </form>
+        </td>
+    </tr>
+</table>
+<a href="/student/courses">返回课程列表</a>
+<a href="/home">返回首页</a>
+</body>
+</html>

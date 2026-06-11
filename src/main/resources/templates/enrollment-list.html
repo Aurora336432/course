@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>选课名单</title></head>
+<body>
+<h1>课程选课学生名单</h1>
+<table border="1">
+    <tr>
+        <th>学生姓名</th>
+        <th>选课时间</th>
+    </tr>
+    <tr th:each="enrollment : ${enrollments}">
+        <td th:text="${enrollment.student.username}"></td>
+        <td th:text="${enrollment.enrolledAt}"></td>
+    </tr>
+</table>
+<a href="/teacher/courses">返回我的课程</a>
+</body>
+</html>

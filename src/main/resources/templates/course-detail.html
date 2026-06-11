@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>课程详情</title></head>
+<body>
+<h1 th:text="${course.name}"></h1>
+<p>教师: <span th:text="${course.teacher.username}"></span></p>
+<p>描述: <span th:text="${course.description}"></span></p>
+<p>学分: <span th:text="${course.credit}"></span></p>
+<p>容量: <span th:text="${course.capacity}"></span></p>
+<p>上课时间: <span th:text="${course.schedule}"></span></p>
+<a href="/student/courses">返回列表</a>
+</body>
+</html>

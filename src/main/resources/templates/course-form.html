@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>课程表单</title></head>
+<body>
+<h1 th:text="${course.id == null} ? '创建课程' : '编辑课程'"></h1>
+<form method="post" th:action="${course.id == null} ? '/teacher/courses' : '/teacher/courses/' + course.id + '/edit'">
+    名称: <input type="text" name="name" th:value="${course.name}" required/><br/>
+    描述: <textarea name="description" th:text="${course.description}"></textarea><br/>
+    学分: <input type="number" name="credit" th:value="${course.credit}" required/><br/>
+    容量: <input type="number" name="capacity" th:value="${course.capacity}" required/><br/>
+    上课时间: <input type="text" name="schedule" th:value="${course.schedule}" required/><br/>
+    <button type="submit">保存</button>
+</form>
+</body>
+</html>

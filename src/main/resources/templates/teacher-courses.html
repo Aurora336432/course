@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的课程 - 教师</title>
+</head>
+<body>
+<h1>我的课程</h1>
+
+<!-- 成功/错误消息 -->
+<div th:if="${successMessage}" th:text="${successMessage}" style="color: green;"></div>
+<div th:if="${error}" th:text="${error}" style="color: red;"></div>
+
+<!-- 创建新课程按钮 -->
+<a th:href="@{/teacher/courses/create}">创建新课程</a>
+
+<!-- 课程列表表格 -->
+<table border="1">
+    <thead>
+        <tr>
+            <th>课程名称</th>
+            <th>学分</th>
+            <th>容量</th>
+            <th>已选人数</th>
+            <th>上课时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="course : ${courses}">
+            <td th:text="${course.name}">课程名</td>
+            <td th:text="${course.credit}">学分</td>
+            <td th:text="${course.capacity}">容量</td>
+            <td th:text="${course.enrolledCount}">已选人数</td>
+            <td th:text="${course.schedule}">上课时间</td>
+            <td>
+                <!-- 编辑按钮：使用 GET 请求，不需要 CSRF -->
+                <a th:href="@{/teacher/courses/{id}/edit(id=${course.id})}">编辑</a>
+
+                <!-- 删除表单：POST 请求，必须使用 th:action 生成 CSRF token -->
+                <form method="post" th:action="@{/teacher/courses/{id}/delete(id=${course.id})}" style="display:inline;">
+                    <button type="submit" onclick="return confirm('确定删除课程【' + '${course.name}' + '】吗？')">删除</button>
+                </form>
+
+                <!-- 查看学生名单：GET 请求，不需要 CSRF，使用 th:href 正确生成 URL -->
+                <a th:href="@{/teacher/courses/{id}/students(id=${course.id})}">查看学生名单</a>
+            </td>
+        </tr>
+        <tr th:if="${courses.empty}">
+            <td colspan="6">暂无课程，请点击上方“创建新课程”添加。</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- 分页（可选） -->
+<div th:if="${totalPages != null and totalPages > 0}">
+    <span th:if="${currentPage > 0}">
+        <a th:href="@{/teacher/courses(page=0)}">首页</a>
+        <a th:href="@{/teacher/courses(page=${currentPage - 1})}">上一页</a>
+    </span>
+    <span> 第 [[${currentPage + 1}]] / [[${totalPages}]] 页 </span>
+    <span th:if="${currentPage + 1 < totalPages}">
+        <a th:href="@{/teacher/courses(page=${currentPage + 1})}">下一页</a>
+        <a th:href="@{/teacher/courses(page=${totalPages - 1})}">末页</a>
+    </span>
+</div>
+
+<br/>
+<a href="/home">返回首页</a>
+</body>
+</html>
